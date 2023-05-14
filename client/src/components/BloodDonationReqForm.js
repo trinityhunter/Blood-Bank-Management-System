@@ -2,8 +2,11 @@ import React from 'react'
 import './login.css'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-function BloodDonationReqForm({user,id,type}) {
+function BloodDonationReqForm(props) {
+
+  const navigate = useNavigate();
   
   const [title, setTitle] = useState()
 
@@ -11,11 +14,49 @@ function BloodDonationReqForm({user,id,type}) {
 
   const [description, setDescription] = useState()
 
+    const loc = window.location.href.split('/')[4]
+
+    const user = window.location.href.split('/')[3]
+
+    console.log(user);
+    
+    const arr = window.location.href.split('/');
+
+    arr.pop();
+
+    const url = arr.toString()
+
+
+
+    // const email = {email: loc}
+
   const handleClick = (e) => {
 
     e.preventDefault();
 
-    
+    const data = [
+      {
+        email: loc
+      },
+      {
+        type: title,
+        amount: amount,
+        disease: description,
+        status: "Pending"
+      }
+    ]
+
+    axios.post(`http://localhost:5001/${user==='donor'?'donate':'request'}/${user==='donor'?'addBloodDonation':'addBloodRequest'}`, data)
+        .then(function (response) {
+            console.log(response);
+            alert("Good");
+        })
+        .catch(function (error) {
+            // alert("Sorry a User with this email already exists");
+            alert("Error in adding Blood Data");
+            console.log(error);
+            return;
+        });
 
   }
 

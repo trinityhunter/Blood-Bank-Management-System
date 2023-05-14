@@ -1,28 +1,44 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './table.css'
+import axios from 'axios'
 
-export default function BloodDonationReqHistory({ user, id }) {
-    const [rows, setRows] = useState(JSON.parse(localStorage.getItem(user === 'recipient' ? 'recipientsData' : 'donorsData')) || [])
+export default function BloodDonationReqHistory(props) {
 
-    function makeid(length) {
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const charactersLength = characters.length;
-        let counter = 0;
-        while (counter < length) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            counter += 1;
-        }
-        return result;
-    }
+    const loc = window.location.href.split('/')[4]
 
-    const data =
-        rows != null ?
-            rows.filter(row => row.userId === id).map((filteredData => (
-                <tr key={makeid}>
-                    <td>{filteredData.title}</td>
-                    <td>{filteredData.description}</td>
+    const user = window.location.href.split('/')[3]
+
+    console.log(loc);
+
+    const email = {email: loc}
+
+    const [data, setData] = useState()
+    
+    
+    useEffect(() => {
+      
+        axios.post(`http://localhost:5001/${user==='donor'?'donate':'request'}/${user==='donor'?'getBloodDonationForm':'getBloodRequestForm'}`, email)
+        .then(function (response) {
+            console.log(response.data.result);
+            setData(response.data.result)
+        })
+        .catch(function (error) {
+            // alert("Sorry a User with this email already exists");
+            alert("Please Login with correct credentials, wrong password");
+            console.log(error);
+            return;
+        });
+        
+    }, [window.location.href])
+    
+
+    const mapper = 
+        data != null ?
+            data.map((filteredData => (
+                <tr key={filteredData.email}>
+                    <td>{filteredData.type}</td>
+                    <td>{filteredData.disease}</td>
                     <td>{filteredData.amount}</td>
                     <td style={{'color':'red'}}>{filteredData.status}</td>
                 </tr>
@@ -41,7 +57,7 @@ export default function BloodDonationReqHistory({ user, id }) {
                         <th>Amount(units)</th>
                         <th>Status</th>
                     </tr>
-                    {data}
+                    {mapper}
                 </table>
             </div>
         </div>

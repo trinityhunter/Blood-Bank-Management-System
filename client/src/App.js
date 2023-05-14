@@ -1,9 +1,10 @@
 import React from 'react'
-import { BrowserRouter,Routes,Route, HashRouter } from 'react-router-dom'
+import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import HomePage from './components/HomePage'
 import DonorsLogin from './components/DonorsLogin'
 import RecipientsLogin from './components/RecipientsLogin'
 import AdminPage from './components/AdminPage'
+import AdminActionPage from './components/AdminActionPage'
 import DonorsPage from './components/DonorsPage'
 import RecipientsPage from './components/RecipientsPage'
 import AdminLogin from './components/AdminLogin'
@@ -15,7 +16,7 @@ import Api from './components/Api'
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <div className='app'>
         <Api/>
         <Routes>
@@ -23,7 +24,7 @@ function App() {
           <Route path='/admin' element={<AdminLogin/>} />
           <Route path='/admin/:id' element={<AdminPage/>} />
           <Route path='/admin/signup' element={<AdminSignup/>} />
-          <Route path='/admin/:id/:type' element={<Page/>} />
+          <Route path='/admin/:id/requests' element={<AdminActionPage/>} />
           <Route path='/donor' element={<DonorsLogin/>} />
           <Route path='/donor/:id' element={<DonorsPage/>} />
           <Route path='/donor/signup' element={<DonorsSignup/>} />
@@ -34,7 +35,7 @@ function App() {
           <Route path='/recipient/:id/:type' element={<Page/>} />
         </Routes>
       </div>
-    </HashRouter>
+    </BrowserRouter>
   )
 }
 

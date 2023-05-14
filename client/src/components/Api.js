@@ -9,7 +9,7 @@ const Api = () => {
     useEffect(() => {
         axios.get('http://localhost:5001/user/getUsers')
         .then(function (response) {
-            console.log(response);
+            // console.log(response);
             setData(response)
         })
     }, [])
@@ -29,17 +29,11 @@ const Api = () => {
         }
     ]
 
-    const don = [
+    const don = 
         {
             email: 'raviragwwxjbhgoshaaslgejgrdgbhgc619nb1@gmail.com'
-        },
-        {
-            type: "A+",
-            amount: 20,
-            disease: "NA",
-            status: "Pending"
         }
-    ]
+    
     
 
     const user = {
@@ -49,7 +43,7 @@ const Api = () => {
     }
 
     const handleClick = () => {
-        axios.post('http://localhost:5001/donate/addBloodDonation', don)
+        axios.post('http://localhost:5001/donate/getBloodDonationForm', don)
         .then(function (response) {
             console.log(response.code);
             alert("Good");

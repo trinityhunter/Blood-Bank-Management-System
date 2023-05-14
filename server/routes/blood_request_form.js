@@ -3,7 +3,7 @@ import { getBloodRequestForm, addBloodRequest } from '../controllers/request_blo
 
 const router = express.Router();
 
-router.get('/getBloodRequestForm', getBloodRequestForm)
+router.post('/getBloodRequestForm', getBloodRequestForm)
 router.post('/addBloodRequest', addBloodRequest)
 
 export default router; 

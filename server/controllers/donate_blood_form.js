@@ -3,13 +3,22 @@ import users from '../models/auth.js'
 
 export const getBloodDonationForm = async(req, res) => {
 
+    const { email } = req.body;
     try{
-        const allBlood = await donate_blood_form.find();
-        const allBloodDetails = []
-        allBlood.forEach(items => {
-            allBloodDetails.push({ type: items.type, amount: items.amount, disease: items.disease })
-        })
-        res.status(200).json(allBloodDetails);
+        
+        const existingUser = await users.findOne({email});
+
+        // console.log(existingUser)
+
+        if(!existingUser){
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        const arr = existingUser.donate;
+
+        res.status(200).json({ result: arr });
+
     }
     catch(error){
         res.status(404).json({ message: error.message });
@@ -19,9 +28,17 @@ export const getBloodDonationForm = async(req, res) => {
 
 export const addBloodDonation = async(req, res) => {
 
+    const { email } = req.body[0];
+    // const { email } = req.body[0];
+
+    // console.log(email)
+
+    const { type, amount, disease, status } = req.body[1];
     
     try{
-        const existingUser = await users.findOne(req.body[0]);
+        const existingUser = await users.findOne({email});
+
+        // console.log(existingUser)
     
         if(!existingUser){
             res.status(404).json({ error: "User not found" });
@@ -30,17 +47,25 @@ export const addBloodDonation = async(req, res) => {
 
         const arr = existingUser.donate;
 
-        arr.push(req.body[1]);
 
-        const user = {
-            name: existingUser.name,
-            email: existingUser.email,
-            password: existingUser.password,
-            request: existingUser.request,
-            donate: arr
+        // console.log(arr);
+
+        const data = {
+            type: type,
+            amount: amount,
+            disease: disease,
+            status: status
         }
+
+        arr.push(data);
+
+        existingUser.donate=arr;
+
+        let result = await users.updateOne({_id:existingUser._id},{
+            $set : existingUser
+        })
         
-        await user.save();
+        console.log(data)
         res.status(200).json("Added a new Blood Donation Form Successfully")
 
     }

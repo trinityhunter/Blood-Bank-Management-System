@@ -3,7 +3,7 @@ import { getBloodDonationForm, addBloodDonation } from '../controllers/donate_bl
 
 const router = express.Router();
 
-router.get('/getBloodDonationForm', getBloodDonationForm)
+router.post('/getBloodDonationForm', getBloodDonationForm)
 router.post('/addBloodDonation', addBloodDonation)
 
 export default router; 
